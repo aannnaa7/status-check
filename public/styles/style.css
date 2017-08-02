@@ -1,0 +1,124 @@
+* {
+    box-sizing: border-box;
+}
+html {
+    font-size: 65%;
+    background-color: #fff;
+}
+body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    font-family: sans-serif;
+}
+
+header {
+	height: 50px;
+	background-color: #ffffff;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+}
+.navigation {
+    height: 100%;
+}
+.navigation__item {
+    width: 50%;
+    height: 100%;
+    display: inline-block;
+    padding: 0 11px;
+    margin: 0;
+    float: left;
+    font-size: 1.8rem;
+    color: #505b69;
+    text-decoration: none;
+}
+.navigation__item_active {
+    border-bottom: 4px solid #ffc80a;
+    font-weight: bold;
+    color: #000;
+}
+
+@supports (display: flex) {
+    .navigation__item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    header {
+        height: 80px;
+    }
+    .navigation {
+        margin-left: 53px;
+    }
+    .navigation__item {
+        width: auto;
+    }
+    .navigation__item:first-child {
+        margin-right: 40px;
+    }
+}
+
+main {
+    padding: 6px;
+}
+.employee {
+    padding: 6px;
+}
+.employee__wrapper {
+    padding: 11px 11px 11px 87px;
+    position: relative;
+	height: 81px;
+	border-radius: 5px;
+	background-color: #ffffff;
+	box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+}
+.employee__avatar {
+    position: absolute;
+    top: 11px;
+    left: 11px;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    display: block;
+}
+.employee__name {
+    margin: 0;
+    padding: 5px 0;
+    font-size: 1.6rem;
+}
+.employee__date {
+    margin: 0;
+    padding: 0;
+    font-size: 1.6rem;
+    color: #9fa3af;
+}
+.employee__subscribe {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: block;
+    width: 26px;
+    height: 26px;
+    padding: 5px;
+    border-radius: 5px;
+    border: solid 1px #e7e8eb;
+    background: none;
+}
+.employee__subscribe-icon {
+    display: block;
+}
+
+@media screen and (min-width: 768px) {
+    main {
+        padding: 12px;
+    }
+    .employee {
+        padding: 12px;
+        width: 50%;
+        float: left;
+    }
+}
