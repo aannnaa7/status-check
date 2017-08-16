@@ -1,0 +1,14 @@
+{
+    "name": "Barcamp 2017 Demo",
+    "short_name": "#barcampevn17",
+    "description": "Harvesting PWA awesomeness",
+    "icons": [{
+        "src": "assets/icon-4x.png",
+        "type": "image/png",
+        "sizes": "192x192"
+    }],
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "oceanblue",
+    "theme_color": "oceanblue"
+}
