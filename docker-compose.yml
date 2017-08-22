@@ -1,13 +1,17 @@
-node:
-    build: .
-    links:
-        - redis
-    ports:
-        - "8080:8080"
-    volumes:
-        - ./:/src
+version: '3'
 
-redis:
-    image: redis
-    ports:
-        - "6379"
+services:
+    node:
+        build: .
+        links:
+            - redis
+        ports:
+            - "8080:8080"
+        volumes:
+            - ./:/src
+        env_file: ~/status-check.env
+
+    redis:
+        image: redis
+        ports:
+            - "6379"
