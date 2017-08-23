@@ -65,6 +65,14 @@ header {
 main {
     padding: 6px;
 }
+
+select{
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 7px;
+    width: 100%;
+}
+
 .employee {
     padding: 6px;
 }
@@ -121,4 +129,17 @@ main {
         width: 50%;
         float: left;
     }
+}
+
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+.clear{
+    clear: both;
 }
