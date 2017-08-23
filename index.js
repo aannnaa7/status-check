@@ -1,10 +1,15 @@
 const express = require('express'),
-    redis = require('redis'),
-    fetchEmployees = require('./lib/fetcher');
+      redis = require('redis'),
+      indexHtml = require('./lib/page'),
+      fetchEmployees = require('./lib/fetcher');
 
 const app = express();
 
 const client = redis.createClient('6379', 'redis');
+
+app.get('/', async (req, res, next) => {
+    res.end(indexHtml());
+});
 
 app.get('/api/staff', async (req, res, next) => {
     try {

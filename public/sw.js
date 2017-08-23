@@ -1,8 +1,8 @@
 var CACHE_NAME = 'my-site-cache-v1';
 var urlsToCache = [
   '/',
-  '/styles/barcamp.css',
-  '/script/barcamp.js'
+  '/styles/style.css',
+  '/scripts/app.js'
 ];
 
 self.addEventListener('install', function(event) {
