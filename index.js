@@ -13,8 +13,9 @@ app.get('/', async (req, res, next) => {
 
 app.get('/api/staff', async (req, res, next) => {
     try {
-        let employees = await fetchEmployees();
-        res.end(JSON.stringify(employees));
+        client.get('employees', (err, employees) => {
+            res.end(employees);
+        });
     } catch (e) {
         res.end('something went wrong: \n', JSON.stringify(e))
     }
@@ -22,6 +23,17 @@ app.get('/api/staff', async (req, res, next) => {
 
 app.use(express.static('public'));
 
-app.listen(process.env.PORT || 8080, () => {
-    console.log('Listening on port ' + (process.env.PORT || 8080));
-});
+async function start() {
+    let employees = await fetchEmployees();
+    client.set('employees', JSON.stringify(employees));
+}
+
+start()
+    .then(() => {
+        app.listen(process.env.PORT || 8080, () => {
+            console.log('Listening on port ' + (process.env.PORT || 8080));
+        });
+    })
+    .catch(e => {
+        console.error('cannot start server: ', e);
+    });
