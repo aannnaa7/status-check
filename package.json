@@ -9,6 +9,7 @@
   "author": "Gagik Arustamyan",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "redis": "^2.7.1",
     "web-push": "^3.2.2",

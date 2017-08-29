@@ -12,7 +12,8 @@ var APP = (function () {
 				value: "lastStatusChange"
 			}
 		],
-		selectedOption: "fullName"
+		selectedOption: "fullName",
+		swSupport: null
 	};
 
 	var statusController = {
@@ -26,22 +27,73 @@ var APP = (function () {
 				if (this.readyState == 4 && this.status == 200) {
 
 					model.accounts = JSON.parse(this.responseText);
+
 					model.controllerData = model.accounts.filter(function(account){
 						return account.status == params.status;
 					});
-					view.render();
+
+					NOTIFICATION.init(function(support, status, subscription){
+						if(status) {
+							statusController.getSubscribers(subscription, function(){
+								statusController.updateOrdering("lastStatusChange");
+								model.swSupport = support;
+								view.render();
+							});
+						}
+						else {
+							model.swSupport = support;
+							view.render();
+						}
+					});
 				}
 			};
 		},
 
-		subscribe: function(id){
-			for(index = 0; index < model.accounts.length; index++){
-				if(model.accounts[index].id == id){
-					model.accounts[index].subscribed = !model.accounts[index].subscribed;
-					break;
+		setSubscribers: function(subscribers, subscription){
+			var xhttp = new XMLHttpRequest();
+			xhttp.open("POST", "api/subscriptions");
+			xhttp.setRequestHeader("Content-Type", "application/json");
+			xhttp.send(JSON.stringify({key:subscription, value:subscribers}));
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+
+					console.log(this.responseText);
 				}
-			}
-			view.render();
+			};
+		},
+
+		getSubscribers: function(subscription, callback){
+			var xhttp = new XMLHttpRequest();
+			xhttp.open("GET", "api/subscriptions?key="+subscription, true);
+			xhttp.send();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200 && this.responseText) {
+					var subscribers = JSON.parse(this.responseText);
+					for(index = 0; index < model.accounts.length; index++){
+						if(subscribers.indexOf(model.accounts[index].id) != -1) model.accounts[index].subscribed = true;
+					}
+				}
+				callback();
+			};
+		},
+
+		subscribe: function(id){
+			NOTIFICATION.subscribe(function(status,subscription){
+				if(status){
+					var subscribers = [];
+					for(index = 0; index < model.accounts.length; index++){
+						if(model.accounts[index].id == id){
+							model.accounts[index].subscribed = !model.accounts[index].subscribed;
+						}
+						if(model.accounts[index].subscribed) subscribers.push(model.accounts[index].id);
+					}
+					statusController.setSubscribers(subscribers, subscription);
+					view.render();
+				}
+				else{
+					alert("You need to open permission.");
+				}
+			});
 		},
 
 		updateOrdering: function(sortBy){
@@ -49,7 +101,8 @@ var APP = (function () {
 
 			var arr = model.controllerData;
 			model.controllerData.sort(function (a, b) {
-			  return a[sortBy] > b[sortBy] ? 1 : a[sortBy] == b[sortBy] ? 0 : -1;
+				if(sortBy == "lastStatusChange") b = [a, a = b][0];
+				return a[sortBy] > b[sortBy] ? 1 : a[sortBy] == b[sortBy] ? 0 : -1;
 			});
 			view.render();
 		},
@@ -61,7 +114,7 @@ var APP = (function () {
 
 	var view = {
 		formatDate: function(milliseconds) {
-			var date = new Date(milliseconds);
+			var date = new Date(milliseconds-4*60*60*1000);
 			var monthNames = [
 				"January", "February", "March",
 				"April", "May", "June", "July",
@@ -93,7 +146,11 @@ var APP = (function () {
 
 			var img = document.createElement('img');
 			img.classList.add("employee__avatar");
-			img.src = "assets/staff/tatev.jpg";
+			img.src = "http://status.sflpro.com/assets/avatars/"+account.fullName.replace(" ","-")+"-50x50.jpg";
+			img.addEventListener("error", function(){
+				img.src = "images/avatar.png";
+				return true;
+			});
 			div.appendChild(img);
 
 			var h2 = document.createElement('h2');
@@ -103,17 +160,19 @@ var APP = (function () {
 
 			var p = document.createElement('p');
 			p.classList.add("employee__date");
-			p.textContent = view.formatDate(account.lastStatusChange);
+			p.textContent = view.formatDate(Date.parse(account.lastStatusChange));
 			div.appendChild(p);
 
-			var button = document.createElement('button');
-			button.classList.add("employee__subscribe");
-			var icon = account.subscribed ? "checkmark":"bell";
-			button.innerHTML = '<svg class="icon icon-'+icon+'"><use xlink:href="#icon-'+icon+'"></use></svg>';
-			button.addEventListener("click", function(){
-				statusController.subscribe(account.id);
-			});
-			div.appendChild(button);
+			if(model.swSupport){
+				var button = document.createElement('button');
+				button.classList.add("employee__subscribe");
+				var icon = account.subscribed ? "checkmark":"bell";
+				button.innerHTML = '<svg class="icon icon-'+icon+'"><use xlink:href="#icon-'+icon+'"></use></svg>';
+				button.addEventListener("click", function(){
+					statusController.subscribe(account.id);
+				});
+				div.appendChild(button);
+			}
 
 			return article;
 		},
@@ -137,7 +196,7 @@ var APP = (function () {
 			return select;
 		},
 
-		render: function(accounts){
+		render: function(){
 			main.innerHTML = "";
 
 			var select = view.createSelect();
@@ -164,5 +223,5 @@ var APP = (function () {
 		}
 	};
 
-	return {statusController};
+	return {statusController:statusController};
 }());
