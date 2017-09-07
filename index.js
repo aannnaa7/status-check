@@ -3,12 +3,11 @@ const client = require('./lib/redis');
 const page = require('./lib/page');
 const employees = require('./lib/employees');
 const subscriptions = require('./lib/subscriptions');
-<<<<<<< HEAD
 const bodyParser = require('body-parser')
 
 const app = express();
 
-app.use( bodyParser.json() ); 
+app.use( bodyParser.json() );
 
 app.get('/', async (req, res, next) => {
     res.end(page());
@@ -36,33 +35,6 @@ app.put('/api/subscriptions', () => {
 
 app.post('/api/subscriptions', (req, res, next) => {
     res.end(subscriptions.set(req.body.key, req.body.value));
-=======
-
-const app = express();
-
-app.get('/', async (req, res, next) => {
-    res.end(page());
-});
-
-app.get('/api/staff', async (req, res, next) => {
-    try {
-        res.end(await employees.list());
-    } catch (e) {
-        res.end('something went wrong: \n', JSON.stringify(e))
-    }
-});
-
-app.get('/api/subscriptions/:subscription', () => {
-    //
-});
-
-app.put('/api/subscriptions/:subscription', () => {
-    //
-});
-
-app.post('/api/subscriptions', () => {
-    //
->>>>>>> bbe0a1951f3e3cab18f488aec40d5231fbe4279e
 });
 
 app.use(express.static('public'));

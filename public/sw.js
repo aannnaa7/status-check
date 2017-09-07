@@ -38,17 +38,12 @@ self.addEventListener('push', function(event) {
 var CACHE_NAME = 'status';
 var urlsToCache = [
   '/',
-<<<<<<< HEAD
   '/scripts/app.js',
   '/scripts/route.js',
   '/scripts/svgxuse.js',
   '/scripts/main.js',
   '/styles/style.css',
   '/index.html'
-=======
-  '/styles/style.css',
-  '/scripts/app.js'
->>>>>>> bbe0a1951f3e3cab18f488aec40d5231fbe4279e
 ];
 
 self.addEventListener('install', function(event) {
